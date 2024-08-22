@@ -1,0 +1,285 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="jquery.mobile-1.4.5/jquery.mobile-1.4.5.css"/>
+        <script src="jquery.mobile-1.4.5/jquery-1.11.1.min.js"></script>
+        <script src="jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
+        <script type="text/javascript" src="script.js"></script>
+        <link rel="stylesheet" href="style.scss"/>
+        <script src="JsBarcode.all.min.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body id="pagecontainer">
+        <div data-role="page" id="mainpage">
+            <div data-role="panel" id="mypanel" data-display="reveal">
+                <p align=right>
+                    <a href="#mainpage" data-rel="close" data-role="button" data-icon="delete" data-iconpos="left" class="ui-btn ui-shadow ui-corner-all ui-icon-delete ui-btn-icon-notext">close</a>
+                </p>
+                <ul data-role="listview" id="reservelist"></ul>
+            </div>
+            <div data-role="header">
+                <a href="#mypanel" data-role="button" data-icon="bars" data-iconpos="left">예매목록</a>
+                <h1>고속버스 예매 시스템</h1>
+                <a href="#checkReservation" data-role="button" data-icon="eye" data-iconpos="right">예매확인</a>
+            </div>
+
+            <div data-role="main" class="ui-content">
+                <form id="firstForm">
+                    <legend>승차권 예약</legend>
+                    <div data-role="fieldcontain">
+                        <label for="source">출발지</label>
+                        <select name="source" id="source" onchange="sourceChange()">
+                            <option value=""/>선  택
+                            <optgroup label="서울">
+                                <option value="020"/>센트럴
+                                <option value="032"/>동서울
+                            </optgroup>
+                            <optgroup label="경기">
+                                <option value="310"/>천안
+                                <option value="190"/>안산
+                            </optgroup>
+                            <optgroup label="충남">
+                                <option value="456"/>정안(휴)
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="destination">도착지</label>
+                        <select name="destination" id="destination" onchange="checkData()">
+                            <option value=""/>선  택
+                        </select>
+                    </div>
+                    <div id="dateDiv" data-role="fieldcontain">
+                        <label for="date">날짜</label>
+                        <input type="date" name="date" id="date" value="" onchange="checkData()"/>
+                    </div>
+                </form>
+                <a id="firstSubmit" href="" data-role="button" data-icon="arrow-r" data-iconpos="right" onclick="injectList()">출발편 선택</a>
+            </div>
+
+            <div data-role="footer">
+                <h1>고속버스 예매 시스템</h1>
+            </div>
+
+        </div>
+
+        <div data-role="page" id="buslist">
+            <form id="secondForm">
+                <div data-role="header">
+                    <a href="#mainpage" data-role="button" data-icon="arrow-l" data-iconpos="left">뒤로</a>
+                    <h1>출발편 선택</h1>
+                </div>
+
+                <div data-role="main" class="ui-content">
+                    <table id="buslists" data-role="table" data-mode="columntoggle" class="ui-responsive" style="border:2px solid #000000;">
+                        <thead>
+                            <tr>
+                                <th style="text-align:center;">출발</th>
+                                <th style="text-align:center;">등급</th>
+                                <th style="text-align:center;">회사</th>
+                                <th style="text-align:center;">잔여</th>
+                                <th style="text-align:center;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="listbody"></tbody>
+                        <tfoot></tfoot>
+                    </table>
+                    <input type="hidden" id="selectedBus"></input>
+                </div>
+                <div data-role="footer">
+                    <h1>고속버스 예매 시스템</h1>
+                </div>
+            </form>
+        </div>
+
+        <div data-role="page" id="buspage">
+            <form id="thirdForm">
+                <div data-role="header">
+                    <a href="#buslist" data-role="button" data-icon="arrow-l" data-iconpos="left">뒤로</a>
+                    <h1>좌석 선택</h1>
+                </div>
+
+                <div data-role="main" class="ui-content">
+                    <div id="select" style="display:none;">
+                        <select multiple id='seats' onchange="selectchange()">
+                            <option id="opt_seat1" value="seat1">seat1</option>
+                            <option id="opt_seat2" value="seat2">seat2</option>
+                            <option id="opt_seat3" value="seat3">seat3</option>
+                            <option id="opt_seat4" value="seat4">seat4</option>
+                            <option id="opt_seat5" value="seat5">seat5</option>
+                            <option id="opt_seat6" value="seat6">seat6</option>
+                            <option id="opt_seat7" value="seat7">seat7</option>
+                            <option id="opt_seat8" value="seat8">seat8</option>
+                            <option id="opt_seat9" value="seat9">seat9</option>
+                            <option id="opt_seat10" value="seat10">seat10</option>
+                            <option id="opt_seat11" value="seat11">seat11</option>
+                            <option id="opt_seat12" value="seat12">seat12</option>
+                            <option id="opt_seat13" value="seat13">seat13</option>
+                            <option id="opt_seat14" value="seat14">seat14</option>
+                            <option id="opt_seat15" value="seat15">seat15</option>
+                            <option id="opt_seat16" value="seat16">seat16</option>
+                            <option id="opt_seat17" value="seat17">seat17</option>
+                            <option id="opt_seat18" value="seat18">seat18</option>
+                            <option id="opt_seat19" value="seat19">seat19</option>
+                            <option id="opt_seat20" value="seat20">seat20</option>
+                            <option id="opt_seat21" value="seat21">seat21</option>
+                            <option id="opt_seat22" value="seat22">seat22</option>
+                            <option id="opt_seat23" value="seat23">seat23</option>
+                            <option id="opt_seat24" value="seat24">seat24</option>
+                            <option id="opt_seat25" value="seat25">seat25</option>
+                            <option id="opt_seat26" value="seat26">seat26</option>
+                            <option id="opt_seat27" value="seat27">seat27</option>
+                            <option id="opt_seat28" value="seat28">seat28</option>
+                            <option id="opt_seat29" value="seat29">seat29</option>
+                            <option id="opt_seat30" value="seat30">seat30</option>
+                            <option id="opt_seat31" value="seat31">seat31</option>
+                            <option id="opt_seat32" value="seat32">seat32</option>
+                            <option id="opt_seat33" value="seat33">seat33</option>
+                            <option id="opt_seat34" value="seat34">seat34</option>
+                            <option id="opt_seat35" value="seat35">seat35</option>
+                            <option id="opt_seat36" value="seat36">seat36</option>
+                            <option id="opt_seat37" value="seat37">seat37</option>
+                            <option id="opt_seat38" value="seat38">seat38</option>
+                            <option id="opt_seat39" value="seat39">seat39</option>
+                            <option id="opt_seat40" value="seat40">seat40</option>
+                            <option id="opt_seat41" value="seat41">seat41</option>
+                            <option id="opt_seat42" value="seat42">seat42</option>
+                            <option id="opt_seat43" value="seat43">seat43</option>
+                            <option id="opt_seat44" value="seat44">seat44</option>
+                            <option id="opt_seat45" value="seat45">seat45</option>
+                        </select>
+                    </div>
+                    <div id="statusView">
+                        <p id="seatstatus">
+                            현재 선택 좌석 수 : 0
+                        </p>
+                    </div>
+                    <!-- <input id="seatsview" type="text" readonly="true"></input> -->
+                    <table id="busSeats" data-role="table" data-mode="columntoggle" class="ui-responsive" style="border:2px solid #000000;">
+                        <thead>
+                            <tr>
+                                <th colspan="5" style="text-align:center;">앞</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="seat_drive" colspan="2" style="vertical-align:middle;text-align:center;">운전석</td>
+                                <td id="corridor" rowspan="11" style="vertical-align:middle;text-align:center;">복<br>도</td>
+                                <td id="entrance" colspan="2" style="vertical-align:middle;text-align:center;">출입문</td>
+                            </tr>
+                            <tr>
+                                <td id="seat1" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">1</td>
+                                <td id="seat2" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">2</td>
+                                <td id="seat3" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">3</td>
+                                <td id="seat4" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">4</td>
+                            </tr>
+                            <tr>
+                                <td id="seat5" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">5</td>
+                                <td id="seat6" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">6</td>
+                                <td id="seat7" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">7</td>
+                                <td id="seat8" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">8</td>
+                            </tr>
+                            <tr>
+                                <td id="seat9" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">9</td>
+                                <td id="seat10" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">10</td>
+                                <td id="seat11" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">11</td>
+                                <td id="seat12" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">12</td>
+                            </tr>
+                            <tr>
+                                <td id="seat13" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">13</td>
+                                <td id="seat14" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">14</td>
+                                <td id="seat15" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">15</td>
+                                <td id="seat16" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">16</td>
+                            </tr>
+                            <tr>
+                                <td id="seat17" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">17</td>
+                                <td id="seat18" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">18</td>
+                                <td id="seat19" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">19</td>
+                                <td id="seat20" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">20</td>
+                            </tr>
+                            <tr>
+                                <td id="seat21" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">21</td>
+                                <td id="seat22" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">22</td>
+                                <td id="seat23" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">23</td>
+                                <td id="seat24" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">24</td>
+                            </tr>
+                            <tr>
+                                <td id="seat25" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">25</td>
+                                <td id="seat26" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">26</td>
+                                <td id="seat27" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">27</td>
+                                <td id="seat28" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">28</td>
+                            </tr>
+                            <tr>
+                                <td id="seat29" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">29</td>
+                                <td id="seat30" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">30</td>
+                                <td id="seat31" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">31</td>
+                                <td id="seat32" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">32</td>
+                            </tr>
+                            <tr>
+                                <td id="seat33" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">33</td>
+                                <td id="seat34" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">34</td>
+                                <td id="seat35" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">35</td>
+                                <td id="seat36" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">36</td>
+                            </tr>
+                            <tr>
+                                <td id="seat37" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">37</td>
+                                <td id="seat38" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">38</td>
+                                <td id="seat39" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">39</td>
+                                <td id="seat40" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">40</td>
+                            </tr>
+                            <tr>
+                                <td id="seat41" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">41</td>
+                                <td id="seat42" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">42</td>
+                                <td id="seat43" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">43</td>
+                                <td id="seat44" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">44</td>
+                                <td id="seat45" style="vertical-align:middle;text-align:center;" onclick="multiSelect(this)">45</td>
+                            </tr>
+
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="5" style="text-align:center;">뒤</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <a id="toPurchase" href="" data-role="button" data-icon="arrow-r" data-iconpos="right">결제하기</a>
+                    <!-- <input type="submit" value="결제하기" data-icon="arrow-r" data-iconpos="right" data-inline="false"> -->
+
+                </div>
+                <div data-role="footer">
+                    <h1>고속버스 예매 시스템</h1>
+                </div>
+            </form>
+        </div>
+        <div data-role="page" id="purchase">
+            <div data-role="header">
+                <a href="#buspage" data-role="button" data-icon="arrow-l" data-iconpos="left">뒤로</a>
+                <h1>결제</h1>
+            </div>
+
+            <div data-role="main" class="ui-content">
+                <div id="purchaseDetail"></div>
+                <div id="purchaseButtonDiv" style="visibility:hidden;">
+                    <a id="doPurchase" onclick="setReservationData()" href="" data-role="button" data-icon="arrow-r" data-iconpos="right">결제</a>
+                </div>
+            </div>
+            <div data-role="footer">
+                <h1>고속버스 예매 시스템</h1>
+            </div>
+        </div>
+        <div data-role="page" id="checkReservation">
+            <div data-role="header">
+                <a href="#mainpage" data-role="button" data-icon="arrow-l" data-iconpos="left" onclick="renewal()">홈으로</a>
+                <h1>예매 확인</h1>
+            </div>
+
+            <div data-role="main" class="ui-content">
+                <div id="reservationDetail">
+                    <h4>예매한 내역이 없습니다.</h4>
+                </div>
+            </div>
+            <div data-role="footer">
+                <h1>고속버스 예매 시스템</h1>
+            </div>
+        </div>
+    </body>
+</html>
